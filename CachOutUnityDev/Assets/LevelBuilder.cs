@@ -7,7 +7,11 @@ using UnityEngine.Tilemaps;
 public class LevelBuilder : MonoBehaviour
 {
     [Header("Level Build Data")]
-    public int LevelSize = 5;
+	public int stageNo = 1;
+	public static int MaxHorizSize = 60;
+	public static int MaxVertSize = 40;
+    public int LevelHorizSize = Math.Max(5+(stageNo-1)*3/2, MaxHorizSize);
+	public int LevelVertSize = Math.Max(5+(stageNo-1), MaxVertSize);
 
     public int ObstacleCount = 1;
 
@@ -31,115 +35,115 @@ public class LevelBuilder : MonoBehaviour
     public void Start()
     {
         //Instantiate Obstacle and Treasure location guides
-        ObstacleLocations = new int[LevelSize, LevelSize];
-        TreasureLocations = new int[LevelSize, LevelSize];
-        int gridOffset = (LevelSize-1)/2;
+        ObstacleLocations = new int[LevelHorizSize, LevelVertSize];
+        TreasureLocations = new int[LevelHorizSize, LevelVertSize];
+        //int gridOffset = (LevelSize-1)/2;
         
         //First, get the levelsize and calculate where the edges of the tilemap will be.
-        int levelBounds = (LevelSize-1)/2;
+        //int levelBounds = (LevelSize-1)/2;
 
         //First calculate where obstacles will be placed.
         for (int i = 0; i < ObstacleCount; i++)
         {
             bool locationFound = false;
-            int xPos = Random.Range(-levelBounds, levelBounds+1);
-            int yPos = Random.Range(-levelBounds, levelBounds+1);
+            int xPos = Random.Range(0, LevelHorizSize-1);
+            int yPos = Random.Range(0, LevelVertSize-1);
 
             while (!locationFound)
             {
-                if (ObstacleLocations[xPos+gridOffset, yPos+gridOffset] != 1)
+                if (ObstacleLocations[xPos, yPos] != 1)
                 {
                     locationFound = true;
                 }
                 else
                 {
-                    xPos = Random.Range(-levelBounds, levelBounds+1);
-                    yPos = Random.Range(-levelBounds, levelBounds+1);
+                    xPos = Random.Range(0, LevelHorizSize-1);
+                    yPos = Random.Range(0, LevelVertSize-1);
                 }
             }
 
-            ObstacleLocations[xPos+gridOffset, yPos+gridOffset] = 1;
-            Debug.Log("ObstacleLocations marked at [" + (xPos+gridOffset) + "," + (yPos+gridOffset) + "]");
+            ObstacleLocations[xPos, yPos] = 1;
+            Debug.Log("ObstacleLocations marked at [" + (xPos) + "," + (yPos) + "]");
         }
 
         //Now, calculate where the treasures will go
         for (int i = 0; i < TreasureCount; i++)
         {
             bool locationFound = false;
-            int xPos = Random.Range(-levelBounds, levelBounds+1);
-            int yPos = Random.Range(-levelBounds, levelBounds+1);
+            int xPos = Random.Range(0, LevelHorizSize-1);
+            int yPos = Random.Range(0, LevelVertSize-1);
 
             while (!locationFound)
             {
-                if (ObstacleLocations[xPos+gridOffset, yPos+gridOffset] != 1 && TreasureLocations[xPos+gridOffset, yPos+gridOffset] != 1)
+                if (ObstacleLocations[xPos, yPos] != 1 && TreasureLocations[xPos, yPos] != 1)
                 {
                     locationFound = true;
                 }
                 else
                 {
-                    xPos = Random.Range(-levelBounds, levelBounds+1);
-                    yPos = Random.Range(-levelBounds, levelBounds+1);
+                    xPos = Random.Range(0, LevelHorizSize-1);
+                    yPos = Random.Range(0, LevelVertSize-1);
                 }
             }
-            TreasureLocations[xPos+gridOffset, yPos+gridOffset] = 1;
-            Debug.Log("TreasureLocations marked at [" + (xPos+gridOffset) + "," + (yPos+gridOffset) + "]");
+            TreasureLocations[xPos, yPos] = 1;
+            Debug.Log("TreasureLocations marked at [" + (xPos) + "," + (yPos) + "]");
         }
         
         //With the bounds known, begin drawing the ground tiles
-        DrawGroundTiles(-levelBounds, levelBounds);
+        DrawGroundTiles(LevelHorizSize, LevelVertSize);
 
         //Next draw obstacles on all the assigned tiles
-        DrawObstacleTiles(ObstacleLocations, gridOffset);
+        DrawObstacleTiles(ObstacleLocations);
 
         //Finally, draw the treasure tiles on all assigned tiles
-        DrawTreasureTiles(TreasureLocations, gridOffset);
+        DrawTreasureTiles(TreasureLocations);
 
     }
 
-    private void DrawGroundTiles(int negBound, int posBounds)
+    private void DrawGroundTiles(int horizBounds, int vertBounds)
     {
-        for (int i = negBound; i <= posBounds; i++)
+        for (int i = 0; i < horizBounds; i++)
         {
-            for (int j = negBound; j <= posBounds; j++)
+            for (int j = 0; j < vertBounds; j++)
             {
                 Vector3Int location = new Vector3Int(i, j, 0);
-                Tile drawnTile = GroundTiles[Random.Range(0, GroundTiles.Length)];
+                Tile drawnTile = GroundTiles[Random.Range(0, GroundTiles.Length-1)];
                 BaseTilemap.SetTile(location, drawnTile);
                 //Debug.Log("Drew Ground Tile at " + i + "," + j);
             }
         }
     }
 
-    private void DrawObstacleTiles(int[,] obs, int offset)
+    private void DrawObstacleTiles(int[,] obs)
     {
-        for (int i = 0; i < LevelSize; i++)
+        for (int i = 0; i < LevelHorizSize; i++)
         {
-            for (int j = 0; j < LevelSize; j++)
+            for (int j = 0; j < LevelVertSize; j++)
             {
                 //Debug.Log("Trying ObstacleLocations[" + i + "," + j + "]");
                 if(obs[i, j] == 1)
                 {
-                    Vector3Int location = new Vector3Int(i-offset, j-offset, 0);
-                    Tile drawnTile = ObstacleTiles[Random.Range(0, ObstacleTiles.Length)];
+                    Vector3Int location = new Vector3Int(i, j, 0);
+                    Tile drawnTile = ObstacleTiles[Random.Range(0, ObstacleTiles.Length-1)];
                     ObstacleTilemap.SetTile(location, drawnTile);
-                    Debug.Log("Drew Obstacle Tile at " + (i-2) + "," + (j-2));
+                    Debug.Log("Drew Obstacle Tile at " + (i) + "," + (j));
                 }
             }
         }
     }
-    private void DrawTreasureTiles(int[,] obs, int offset)
+    private void DrawTreasureTiles(int[,] tre)
     {
-        for (int i = 0; i < LevelSize; i++)
+        for (int i = 0; i < LevelHorizSize; i++)
         {
-            for (int j = 0; j < LevelSize; j++)
+            for (int j = 0; j < LevelVertSize; j++)
             {
                 //Debug.Log("Trying TreasureLocations[" + i + "," + j + "]");
-                if(obs[i, j] == 1)
+                if(tre[i, j] == 1)
                 {
-                    Vector3Int location = new Vector3Int(i-offset, j-offset, 0);
-                    Tile drawnTile = TreasureTiles[Random.Range(0, TreasureTiles.Length)];
+                    Vector3Int location = new Vector3Int(i, j, 0);
+                    Tile drawnTile = TreasureTiles[Random.Range(0, TreasureTiles.Length-1)];
                     TreasureTilemap.SetTile(location, drawnTile);
-                    Debug.Log("Drew Treasure Tile at " + (i-2) + "," + (j-2));
+                    Debug.Log("Drew Treasure Tile at " + (i) + "," + (j));
                 }
             }
         }
