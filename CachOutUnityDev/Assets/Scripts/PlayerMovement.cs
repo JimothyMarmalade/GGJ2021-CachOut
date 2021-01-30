@@ -24,6 +24,8 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask whatStopsMovement;
     public LayerMask walkableGround;
     public LayerMask treasureSpace;
+	public int TreasureCount;
+	public int stageNo;
 
     [Header("Hidden Gameplay Variables")]
     private bool isOnTreasure = false;
@@ -204,4 +206,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+	public void clearStage()
+	{
+	}
+	
+	public void newStage()
+	{
+	}
 }

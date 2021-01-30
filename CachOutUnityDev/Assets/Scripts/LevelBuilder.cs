@@ -46,9 +46,9 @@ public class LevelBuilder : MonoBehaviour
 		}
         //Instantiate Obstacle and Treasure location guides
         ObstacleLocations = new int[LevelHorizSize, LevelVertSize];
-		ObstacleCount = Random.range(0,stageNo / 5);
+		ObstacleCount = Random.Range(0,stageNo / 5);
         TreasureLocations = new int[LevelHorizSize, LevelVertSize];
-		TreasureCount = Random.range(1,1+stageNo / 10);
+		TreasureCount = Random.Range(1,1+stageNo / 10);
         //int gridOffset = (LevelSize-1)/2;
         
         //First, get the levelsize and calculate where the edges of the tilemap will be.
