@@ -10,8 +10,8 @@ public class LevelBuilder : MonoBehaviour
 	public int stageNo = 1;
 	public static int MaxHorizSize = 60;
 	public static int MaxVertSize = 40;
-    public int LevelHorizSize = Math.Max(5+(stageNo-1)*3/2, MaxHorizSize);
-	public int LevelVertSize = Math.Max(5+(stageNo-1), MaxVertSize);
+    public int LevelHorizSize = 5;
+	public int LevelVertSize = 5;
 
     public int ObstacleCount = 1;
 
@@ -34,6 +34,16 @@ public class LevelBuilder : MonoBehaviour
     //Whenever the new level is loaded, it needs to generate ground tiles, obstacles, and treasures
     public void Start()
     {
+		LevelHorizSize = 5+(stageNo-1)*3/2;
+		if (LevelHorizSize > MaxHorizSize)
+		{
+			LevelHorizSize = MaxHorizSize;
+		}
+		LevelVertSize = 5+(stageNo-1);
+		if (LevelVertSize > MaxVertSize)
+		{
+			LevelVertSize = MaxVertSize;
+		}
         //Instantiate Obstacle and Treasure location guides
         ObstacleLocations = new int[LevelHorizSize, LevelVertSize];
         TreasureLocations = new int[LevelHorizSize, LevelVertSize];
