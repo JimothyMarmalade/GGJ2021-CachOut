@@ -71,10 +71,15 @@ public class PlayerMovement : MonoBehaviour
                 Vector3Int playerLoc = masterGrid.WorldToCell(transform.position);
                 TileBase treasureTile = treasureTilemap.GetTile(playerLoc);
                 treasureTilemap.SetTile(playerLoc, null);
-
                 displayTreasureCoroutine = ShowTreasureThenRemove(playerLoc + new Vector3Int(0, 1, 0), treasureTile);
                 StartCoroutine(displayTreasureCoroutine);
-
+				TreasureCount--;
+				if (TreasureCount <= 0)
+				{
+					clearStage();
+					stageNo++;
+					newStage();
+				}
             }
             else
             {

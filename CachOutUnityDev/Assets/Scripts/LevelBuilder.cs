@@ -20,7 +20,7 @@ public class LevelBuilder : MonoBehaviour
     [Header("Tile Graphics")]
     public Tilemap BaseTilemap;
     public Tilemap ObstacleTilemap;
-    public Tilemap TreasureTilemap;
+    public Tilemap treasureTilemap;
     public Tile[] GroundTiles;
     public Tile[] ObstacleTiles;
 
@@ -46,7 +46,9 @@ public class LevelBuilder : MonoBehaviour
 		}
         //Instantiate Obstacle and Treasure location guides
         ObstacleLocations = new int[LevelHorizSize, LevelVertSize];
+		ObstacleCount = Random.range(0,stageNo / 5);
         TreasureLocations = new int[LevelHorizSize, LevelVertSize];
+		TreasureCount = Random.range(1,1+stageNo / 10);
         //int gridOffset = (LevelSize-1)/2;
         
         //First, get the levelsize and calculate where the edges of the tilemap will be.
@@ -152,7 +154,7 @@ public class LevelBuilder : MonoBehaviour
                 {
                     Vector3Int location = new Vector3Int(i, j, 0);
                     Tile drawnTile = TreasureTiles[Random.Range(0, TreasureTiles.Length-1)];
-                    TreasureTilemap.SetTile(location, drawnTile);
+                    treasureTilemap.SetTile(location, drawnTile);
                     Debug.Log("Drew Treasure Tile at " + (i) + "," + (j));
                 }
             }
