@@ -6,12 +6,14 @@ using UnityEngine.Tilemaps;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Gameplay Variables + Unchanging References")]
+    public GameController gameControllerReference;
     public float moveSpeed = 5;
     public Transform movePoint;
     public GameObject MetalDetector;
     public GameObject MetalDetectorRange;
 
     public AudioSource TreasureSound;
+    public AudioSource NoTreasureSound;
 
     public string currentDirection = "";
 
@@ -69,7 +71,6 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //TreasureCheck();
 
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed*Time.deltaTime);
 
@@ -77,6 +78,8 @@ public class PlayerMovement : MonoBehaviour
             MovePointer();
 
         //If player presses space, game checks for treasure
+        TreasureCheck();
+
         PlayerSearchForTreasure();
         
     }
@@ -95,17 +98,15 @@ public class PlayerMovement : MonoBehaviour
                 displayTreasureCoroutine = ShowTreasureThenRemove(playerLoc + new Vector3Int(0, 1, 0), treasureTile);
                 StartCoroutine(displayTreasureCoroutine);
                 TreasureSound.Play();
-				TreasureCount--;
-				if (TreasureCount <= 0)
-				{
-					clearStage();
-					stageNo++;
-					newStage();
-				}
+
+                gameControllerReference.IncrementScore();
+                gameControllerReference.IncrementTime(3);
             }
             else
             {
                 Debug.Log("No Treasure! Time Lost!");
+                NoTreasureSound.Play();
+                gameControllerReference.IncrementTime(-1);
             }
         }
     }

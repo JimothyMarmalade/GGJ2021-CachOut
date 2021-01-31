@@ -9,11 +9,11 @@ public class LevelBuilder : MonoBehaviour
 {
     [Header("Level Build Data")]
     public GameObject PlayerPointer;
-    public int LevelSize = 5;
+    //public int LevelSize;
 
-    public int ObstacleCount = 1;
+    //public int ObstacleCount;
 
-    public int TreasureCount = 1;
+    //public int TreasureCount;
 
     [Header("Tile Graphics")]
     public Tilemap BaseTilemap;
@@ -32,17 +32,11 @@ public class LevelBuilder : MonoBehaviour
     //Whenever the new level is loaded, it needs to generate ground tiles, obstacles, and treasures
     public void Start()
     {
-        DrawNewBoard();
-    }
-
-    public void Update()
-    {
-        if (Input.GetKeyDown("p"))
-            DrawNewBoard();
+        //DrawNewBoard();
     }
 
 
-    public void DrawNewBoard()
+    public void DrawNewBoard(int LevelSize, int ObstacleCount, int TreasureCount)
     {
         BaseTilemap.ClearAllTiles();
         ObstacleTilemap.ClearAllTiles();
@@ -62,8 +56,9 @@ public class LevelBuilder : MonoBehaviour
             bool locationFound = false;
             int xPos = Random.Range(-levelBounds, levelBounds+1);
             int yPos = Random.Range(-levelBounds, levelBounds+1);
+            int failsafe = 0;
 
-            while (!locationFound)
+            while (!locationFound || !(failsafe > 400))
             {
                 if (ObstacleLocations[xPos+gridOffset, yPos+gridOffset] != 1)
                 {
@@ -74,6 +69,7 @@ public class LevelBuilder : MonoBehaviour
                     xPos = Random.Range(-levelBounds, levelBounds+1);
                     yPos = Random.Range(-levelBounds, levelBounds+1);
                 }
+                failsafe++;
             }
 
             ObstacleLocations[xPos+gridOffset, yPos+gridOffset] = 1;
@@ -86,8 +82,9 @@ public class LevelBuilder : MonoBehaviour
             bool locationFound = false;
             int xPos = Random.Range(-levelBounds, levelBounds+1);
             int yPos = Random.Range(-levelBounds, levelBounds+1);
+            int failsafe = 0;
 
-            while (!locationFound)
+            while (!locationFound || !(failsafe > 400))
             {
                 if (ObstacleLocations[xPos+gridOffset, yPos+gridOffset] != 1 && TreasureLocations[xPos+gridOffset, yPos+gridOffset] != 1)
                 {
@@ -98,6 +95,7 @@ public class LevelBuilder : MonoBehaviour
                     xPos = Random.Range(-levelBounds, levelBounds+1);
                     yPos = Random.Range(-levelBounds, levelBounds+1);
                 }
+                failsafe++;
             }
             TreasureLocations[xPos+gridOffset, yPos+gridOffset] = 1;
             Debug.Log("TreasureLocations marked at [" + (xPos+gridOffset) + "," + (yPos+gridOffset) + "]");
@@ -107,10 +105,10 @@ public class LevelBuilder : MonoBehaviour
         DrawGroundTiles(-levelBounds, levelBounds);
 
         //Next draw obstacles on all the assigned tiles
-        DrawObstacleTiles(ObstacleLocations, gridOffset);
+        DrawObstacleTiles(LevelSize, ObstacleLocations, gridOffset);
 
         //Draw the treasure tiles on all assigned tiles
-        DrawTreasureTiles(TreasureLocations, gridOffset);
+        DrawTreasureTiles(LevelSize, TreasureLocations, gridOffset);
 
         //Finally, Spawn the Player somewhere that isn't on top of an obstacle
         ReplacePlayer(BaseTilemap, gridOffset);
@@ -130,7 +128,7 @@ public class LevelBuilder : MonoBehaviour
         }
     }
 
-    private void DrawObstacleTiles(int[,] obs, int offset)
+    private void DrawObstacleTiles(int LevelSize, int[,] obs, int offset)
     {
         for (int i = 0; i < LevelSize; i++)
         {
@@ -147,7 +145,7 @@ public class LevelBuilder : MonoBehaviour
             }
         }
     }
-    private void DrawTreasureTiles(int[,] obs, int offset)
+    private void DrawTreasureTiles(int LevelSize, int[,] obs, int offset)
     {
         for (int i = 0; i < LevelSize; i++)
         {
@@ -171,8 +169,9 @@ public class LevelBuilder : MonoBehaviour
         bool locationFound = false;
         int xPos = Random.Range(-gridOffset, gridOffset+1);
         int yPos = Random.Range(-gridOffset, gridOffset+1);
+        int failsafe = 0;
 
-        while (!locationFound)
+        while (!locationFound || !(failsafe > 1000))
         {
             if (ObstacleLocations[xPos+gridOffset, yPos+gridOffset] != 1)
             {
@@ -183,6 +182,7 @@ public class LevelBuilder : MonoBehaviour
                 xPos = Random.Range(-gridOffset, gridOffset+1);
                 yPos = Random.Range(-gridOffset, gridOffset+1);
             }
+            failsafe++;
         }
 
         //Valid point found, convert to cell, then world position
