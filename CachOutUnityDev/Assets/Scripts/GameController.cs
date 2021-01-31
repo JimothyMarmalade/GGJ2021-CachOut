@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     [Header("Controller/Object References")]
     public LevelBuilder levelController;
     public PlayerMovement player;
+	public Camera maincam;
 
     
     //Scoring References
@@ -86,11 +87,17 @@ public class GameController : MonoBehaviour
     {
         if (score >= (levelSize*levelSize))
             levelSize+=2;
-        if (levelSize > 9)
-            levelSize = 9;
+        if (levelSize > 40)
+            levelSize = 40;
+		if ((levelSize+3)/2 < 5)
+			maincam.orthographicSize = 5;
+		else
+			maincam.orthographicSize = (levelSize+3)/2;
 
         //Calculate new variables needed to generate board
         obstacleCount = levelSize + (areasVisited-3);
+		if (obstacleCount > levelSize*levelSize/2)
+			obstacleCount = levelSize*levelSize/2;
 
         treasuresInAreaStart = levelSize;
         if (levelSize > 3)

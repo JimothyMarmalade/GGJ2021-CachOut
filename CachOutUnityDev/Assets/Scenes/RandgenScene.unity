@@ -3058,6 +3058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelController: {fileID: 2137717764}
   player: {fileID: 5867397441500673408}
+  maincam: {fileID: 644228919}
   timeRemaining: 20
   score: 0
   areasCleared: 0
