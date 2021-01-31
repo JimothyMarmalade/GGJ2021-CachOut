@@ -11,16 +11,18 @@ public class PlayerMovement : MonoBehaviour
     public GameObject MetalDetector;
     public GameObject MetalDetectorRange;
 
+    public AudioSource TreasureSound;
+
     public string currentDirection = "";
 
     public Sprite[] PlayerPositions;
     public Sprite[] MetalDetectorPositions;
 
     [Header("References to Tilemaps")]
-    public Grid masterGrid;
-    public Tilemap groundTilemap;
-    public Tilemap treasureTilemap;
-    public Tilemap treasureDisplay; 
+    private Grid masterGrid;
+    private Tilemap groundTilemap;
+    private Tilemap treasureTilemap;
+    private Tilemap treasureDisplay; 
     public LayerMask whatStopsMovement;
     public LayerMask walkableGround;
     public LayerMask treasureSpace;
@@ -42,6 +44,23 @@ public class PlayerMovement : MonoBehaviour
         groundTilemap = GameObject.FindGameObjectWithTag("Ground").GetComponent<Tilemap>();
         treasureTilemap = GameObject.FindGameObjectWithTag("Treasure").GetComponent<Tilemap>();
         treasureDisplay = GameObject.FindGameObjectWithTag("TreasureDisplay").GetComponent<Tilemap>();
+
+        if (masterGrid == null)
+        {
+            Debug.Log("Could not find MasterGrid!");
+        }
+        if (groundTilemap == null)
+        {
+            Debug.Log("Could not find groundTilemap!");
+        }
+        if (treasureTilemap == null)
+        {
+            Debug.Log("Could not find treasureTilemap!");
+        }
+        if (treasureDisplay == null)
+        {
+            Debug.Log("Could not find treasureDisplay!");
+        }
 
         currentDirection = "down";
         UpdatePlayerSprites(currentDirection);
@@ -75,6 +94,7 @@ public class PlayerMovement : MonoBehaviour
                 treasureTilemap.SetTile(playerLoc, null);
                 displayTreasureCoroutine = ShowTreasureThenRemove(playerLoc + new Vector3Int(0, 1, 0), treasureTile);
                 StartCoroutine(displayTreasureCoroutine);
+                TreasureSound.Play();
 				TreasureCount--;
 				if (TreasureCount <= 0)
 				{

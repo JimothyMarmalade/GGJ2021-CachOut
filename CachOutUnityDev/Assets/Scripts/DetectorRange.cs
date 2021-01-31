@@ -10,6 +10,10 @@ public class DetectorRange : MonoBehaviour
     public Vector2 ColliderSize;
     private bool isDetectingTreasure = false;
     
+    void Start()
+    {
+        treasureMap = GameObject.FindGameObjectWithTag("Treasure").GetComponent<TilemapCollider2D>();
+    }
     void Update()
     {
         //Debug.Log(name + " isDetectingTreasure = " + isDetectingTreasure);
