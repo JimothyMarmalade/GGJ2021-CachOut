@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TitleScreen.unity
-    guid: 6f9e72b6f80efe649bd982ffec779a7e
+    path: Assets/Scenes/TitleScreenItch.unity
+    guid: 3988587b51200114a9233bb2fe40dbc5
   - enabled: 1
-    path: Assets/Scenes/RandgenScene.unity
+    path: Assets/Scenes/RandgenSceneItch.unity
     guid: 516ede0d531d18a4980d0843b131b3d1
   m_configObjects: {}
